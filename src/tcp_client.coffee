@@ -48,11 +48,6 @@ class Client extends Session
         @emit "connect"
     @socket.on "close", ()-> connected = false
 
-
-  reconnect:(callback)->
-    @socket.destroy()
-    @connect @port, @host, @secure, callback
-
   onceReady: (callback)->
     if connected then callback() else @once "connect", callback
 
@@ -68,8 +63,6 @@ class Client extends Session
     else
       if connecting
         @onceConnected (err)=> if err? then callback err else @_call method, params, callback, timeout
-      else
-        @reconnect (err)=> if err? then callback err else @_call method, params, callback, timeout
 
   _call:(method, params, callback, timeout)->
     id = ++lastID
